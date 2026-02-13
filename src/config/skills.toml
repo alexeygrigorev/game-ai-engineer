@@ -1,0 +1,91 @@
+# Skills Configuration
+#
+# Each skill has:
+# - name: Skill identifier
+# - category: MlAlgorithms, Statistics, Programming, Databases, SoftSkills, DomainKnowledge
+# - description: Short description
+# - difficulty: 1-4 (affects XP needed to level up)
+
+[[skills]]
+name = "Python"
+category = "Programming"
+description = "General-purpose programming language"
+difficulty = 1
+
+[[skills]]
+name = "Rust"
+category = "Programming"
+description = "Systems programming language"
+difficulty = 3
+
+[[skills]]
+name = "SQL"
+category = "Databases"
+description = "Database query language"
+difficulty = 1
+
+[[skills]]
+name = "PyTorch"
+category = "MlAlgorithms"
+description = "Deep learning framework"
+difficulty = 2
+
+[[skills]]
+name = "TensorFlow"
+category = "MlAlgorithms"
+description = "Deep learning framework"
+difficulty = 2
+
+[[skills]]
+name = "Transformers"
+category = "MlAlgorithms"
+description = "Attention-based neural networks"
+difficulty = 3
+
+[[skills]]
+name = "LLM Fine-tuning"
+category = "MlAlgorithms"
+description = "Fine-tuning large language models"
+difficulty = 3
+
+[[skills]]
+name = "RAG"
+category = "MlAlgorithms"
+description = "Retrieval-Augmented Generation"
+difficulty = 2
+
+[[skills]]
+name = "Statistics"
+category = "Statistics"
+description = "Statistical methods and analysis"
+difficulty = 2
+
+[[skills]]
+name = "Linear Algebra"
+category = "Statistics"
+description = "Mathematical foundations"
+difficulty = 2
+
+[[skills]]
+name = "Communication"
+category = "SoftSkills"
+description = "Written and verbal communication"
+difficulty = 1
+
+[[skills]]
+name = "System Design"
+category = "DomainKnowledge"
+description = "Designing scalable systems"
+difficulty = 3
+
+[[skills]]
+name = "MLOps"
+category = "DomainKnowledge"
+description = "ML operations and deployment"
+difficulty = 2
+
+[[skills]]
+name = "Prompt Engineering"
+category = "MlAlgorithms"
+description = "Crafting effective prompts"
+difficulty = 1

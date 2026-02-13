@@ -1,0 +1,123 @@
+# Interview Questions Configuration
+#
+# Questions are selected by skill name during interviews.
+# Skill names with spaces use underscores (e.g., "LLM Fine-tuning" -> "LLM_Fine-tuning")
+
+[[skill]]
+name = "Python"
+
+[[skill.questions]]
+question = "What is the difference between a list and a tuple in Python?"
+options = ["Lists are mutable, tuples are immutable", "Lists are faster than tuples", "Tuples can hold more items", "There is no difference"]
+correct_idx = 0
+
+[[skill.questions]]
+question = "What is a decorator in Python?"
+options = ["A function that modifies another function", "A special type of comment", "A class inheritance mechanism", "A variable naming convention"]
+correct_idx = 0
+
+
+[[skill]]
+name = "PyTorch"
+
+[[skill.questions]]
+question = "What is backpropagation?"
+options = ["Algorithm to compute gradients by chain rule", "A type of neural network layer", "Data preprocessing technique", "A loss function"]
+correct_idx = 0
+
+[[skill.questions]]
+question = "What is a tensor in PyTorch?"
+options = ["A multi-dimensional array", "A type of activation function", "A training algorithm", "A regularization technique"]
+correct_idx = 0
+
+
+[[skill]]
+name = "TensorFlow"
+
+[[skill.questions]]
+question = "What is backpropagation?"
+options = ["Algorithm to compute gradients by chain rule", "A type of neural network layer", "Data preprocessing technique", "A loss function"]
+correct_idx = 0
+
+
+[[skill]]
+name = "Transformers"
+
+[[skill.questions]]
+question = "What is the key innovation in Transformer architecture?"
+options = ["Self-attention mechanism", "Convolutional layers", "Recurrent connections", "Dropout regularization"]
+correct_idx = 0
+
+[[skill.questions]]
+question = "What does 'attention' do in transformers?"
+options = ["Weighs importance of different input tokens", "Applies dropout to prevent overfitting", "Normalizes layer outputs", "Compresses the model size"]
+correct_idx = 0
+
+
+[[skill]]
+name = "LLM Fine-tuning"
+
+[[skill.questions]]
+question = "What is LoRA?"
+options = ["Low-Rank Adaptation for efficient fine-tuning", "A type of language model", "A tokenization method", "A training loss function"]
+correct_idx = 0
+
+[[skill.questions]]
+question = "What is the purpose of fine-tuning?"
+options = ["Adapt a pre-trained model to a specific task", "Reduce model size", "Speed up inference", "Improve model security"]
+correct_idx = 0
+
+
+[[skill]]
+name = "SQL"
+
+[[skill.questions]]
+question = "Which SQL clause is used to filter results?"
+options = ["WHERE", "ORDER BY", "GROUP BY", "SELECT"]
+correct_idx = 0
+
+[[skill.questions]]
+question = "What type of JOIN returns all rows from both tables?"
+options = ["FULL OUTER JOIN", "INNER JOIN", "LEFT JOIN", "RIGHT JOIN"]
+correct_idx = 0
+
+
+[[skill]]
+name = "Statistics"
+
+[[skill.questions]]
+question = "What is the mean of [2, 4, 6, 8]?"
+options = ["5", "4", "6", "4.5"]
+correct_idx = 0
+
+[[skill.questions]]
+question = "What does standard deviation measure?"
+options = ["Spread of data around the mean", "Central tendency", "Correlation between variables", "Probability of an event"]
+correct_idx = 0
+
+
+[[skill]]
+name = "RAG"
+
+[[skill.questions]]
+question = "What does RAG stand for?"
+options = ["Retrieval-Augmented Generation", "Recursive Auto-Generation", "Random Access Generator", "Rapid Application Growth"]
+correct_idx = 0
+
+
+[[skill]]
+name = "System Design"
+
+[[skill.questions]]
+question = "What is the main benefit of microservices?"
+options = ["Independent scaling and deployment", "Simpler debugging", "Faster database queries", "Reduced network latency"]
+correct_idx = 0
+
+
+[[skill]]
+name = "default"
+
+[[skill.questions]]
+question = "How would you describe your experience with this topic?"
+options = ["I have strong practical experience", "I've studied it but need practice", "I've heard of it", "I don't know this"]
+correct_idx = 0

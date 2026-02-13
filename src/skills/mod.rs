@@ -1,5 +1,11 @@
+//! Skills Module
+//!
+//! Defines skills, categories, and proficiency levels for the game.
+//! Skills are loaded from config/skills.toml at compile time.
+
 use serde::{Deserialize, Serialize};
 
+/// Skill categories for organizing skills
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Hash)]
 pub enum SkillCategory {
     MlAlgorithms,
@@ -10,6 +16,7 @@ pub enum SkillCategory {
     DomainKnowledge,
 }
 
+/// Proficiency levels for skills
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Proficiency {
     None = 0,
@@ -47,6 +54,22 @@ impl Proficiency {
     }
 }
 
+impl std::str::FromStr for Proficiency {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "None" => Ok(Proficiency::None),
+            "Basic" => Ok(Proficiency::Basic),
+            "Intermediate" => Ok(Proficiency::Intermediate),
+            "Advanced" => Ok(Proficiency::Advanced),
+            "Expert" => Ok(Proficiency::Expert),
+            _ => Err(format!("Unknown proficiency: {}", s)),
+        }
+    }
+}
+
+/// A skill definition
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Skill {
     pub name: String,
@@ -66,23 +89,17 @@ impl Skill {
     }
 }
 
+/// Skills configuration loaded from TOML
+#[derive(Debug, Clone, Deserialize)]
+struct SkillsConfig {
+    skills: Vec<Skill>,
+}
+
+/// Load all skills from config file
 pub fn get_all_skills() -> Vec<Skill> {
-    vec![
-        Skill::new("Python", SkillCategory::Programming, "General-purpose programming language", 1),
-        Skill::new("Rust", SkillCategory::Programming, "Systems programming language", 3),
-        Skill::new("SQL", SkillCategory::Databases, "Database query language", 1),
-        Skill::new("PyTorch", SkillCategory::MlAlgorithms, "Deep learning framework", 2),
-        Skill::new("TensorFlow", SkillCategory::MlAlgorithms, "Deep learning framework", 2),
-        Skill::new("Transformers", SkillCategory::MlAlgorithms, "Attention-based neural networks", 3),
-        Skill::new("LLM Fine-tuning", SkillCategory::MlAlgorithms, "Fine-tuning large language models", 3),
-        Skill::new("RAG", SkillCategory::MlAlgorithms, "Retrieval-Augmented Generation", 2),
-        Skill::new("Statistics", SkillCategory::Statistics, "Statistical methods and analysis", 2),
-        Skill::new("Linear Algebra", SkillCategory::Statistics, "Mathematical foundations", 2),
-        Skill::new("Communication", SkillCategory::SoftSkills, "Written and verbal communication", 1),
-        Skill::new("System Design", SkillCategory::DomainKnowledge, "Designing scalable systems", 3),
-        Skill::new("MLOps", SkillCategory::DomainKnowledge, "ML operations and deployment", 2),
-        Skill::new("Prompt Engineering", SkillCategory::MlAlgorithms, "Crafting effective prompts", 1),
-    ]
+    const CONFIG: &str = include_str!("../config/skills.toml");
+    let config: SkillsConfig = toml::from_str(CONFIG).expect("Failed to parse skills.toml");
+    config.skills
 }
 
 #[cfg(test)]
@@ -101,7 +118,10 @@ mod tests {
     fn test_proficiency_next() {
         assert_eq!(Proficiency::None.next(), Some(Proficiency::Basic));
         assert_eq!(Proficiency::Basic.next(), Some(Proficiency::Intermediate));
-        assert_eq!(Proficiency::Intermediate.next(), Some(Proficiency::Advanced));
+        assert_eq!(
+            Proficiency::Intermediate.next(),
+            Some(Proficiency::Advanced)
+        );
         assert_eq!(Proficiency::Advanced.next(), Some(Proficiency::Expert));
         assert_eq!(Proficiency::Expert.next(), None);
     }
@@ -117,7 +137,7 @@ mod tests {
     fn test_get_all_skills() {
         let skills = get_all_skills();
         assert!(skills.len() > 0);
-        
+
         let python = skills.iter().find(|s| s.name == "Python");
         assert!(python.is_some());
         assert_eq!(python.unwrap().category, SkillCategory::Programming);
@@ -127,11 +147,17 @@ mod tests {
     #[test]
     fn test_skill_categories() {
         let skills = get_all_skills();
-        
-        let ml_skills: Vec<_> = skills.iter().filter(|s| s.category == SkillCategory::MlAlgorithms).collect();
+
+        let ml_skills: Vec<_> = skills
+            .iter()
+            .filter(|s| s.category == SkillCategory::MlAlgorithms)
+            .collect();
         assert!(ml_skills.len() >= 4);
-        
-        let programming_skills: Vec<_> = skills.iter().filter(|s| s.category == SkillCategory::Programming).collect();
+
+        let programming_skills: Vec<_> = skills
+            .iter()
+            .filter(|s| s.category == SkillCategory::Programming)
+            .collect();
         assert!(programming_skills.len() >= 2);
     }
 

@@ -1,0 +1,159 @@
+# Companies and Jobs Configuration
+#
+# Company tiers: Startup, MidSize, BigTech, Faang
+# Proficiency levels: None, Basic, Intermediate, Advanced, Expert
+
+[[companies]]
+name = "DataStartup AI"
+description = "Fast-growing AI startup focused on NLP solutions"
+tier = "Startup"
+
+[[companies.jobs]]
+id = 1
+title = "Junior ML Engineer"
+salary_min = 80000
+salary_max = 110000
+min_experience_days = 0
+description = "Build ML models for NLP tasks"
+difficulty = 1
+
+[[companies.jobs.requirements]]
+skill_name = "Python"
+min_proficiency = "Intermediate"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "PyTorch"
+min_proficiency = "Basic"
+mandatory = true
+weight = 0.8
+
+
+[[companies]]
+name = "TechCorp Inc"
+description = "Established tech company with ML division"
+tier = "MidSize"
+
+[[companies.jobs]]
+id = 2
+title = "ML Engineer"
+salary_min = 120000
+salary_max = 160000
+min_experience_days = 90
+description = "Develop and deploy ML models at scale"
+difficulty = 2
+
+[[companies.jobs.requirements]]
+skill_name = "Python"
+min_proficiency = "Advanced"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "PyTorch"
+min_proficiency = "Intermediate"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "SQL"
+min_proficiency = "Intermediate"
+mandatory = false
+weight = 0.5
+
+[[companies.jobs.requirements]]
+skill_name = "Statistics"
+min_proficiency = "Intermediate"
+mandatory = true
+weight = 0.7
+
+
+[[companies]]
+name = "MegaTech"
+description = "Large tech company with massive ML infrastructure"
+tier = "BigTech"
+
+[[companies.jobs]]
+id = 3
+title = "Senior AI Engineer"
+salary_min = 180000
+salary_max = 250000
+min_experience_days = 180
+description = "Lead AI projects and mentor junior engineers"
+difficulty = 3
+
+[[companies.jobs.requirements]]
+skill_name = "Python"
+min_proficiency = "Expert"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "Transformers"
+min_proficiency = "Advanced"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "LLM Fine-tuning"
+min_proficiency = "Intermediate"
+mandatory = true
+weight = 0.8
+
+[[companies.jobs.requirements]]
+skill_name = "System Design"
+min_proficiency = "Intermediate"
+mandatory = true
+weight = 0.7
+
+[[companies.jobs.requirements]]
+skill_name = "Communication"
+min_proficiency = "Intermediate"
+mandatory = false
+weight = 0.5
+
+
+[[companies]]
+name = "SearchGiant"
+description = "World's largest search and AI company"
+tier = "Faang"
+
+[[companies.jobs]]
+id = 4
+title = "Staff LLM Engineer"
+salary_min = 280000
+salary_max = 400000
+min_experience_days = 365
+description = "Architect next-generation LLM systems"
+difficulty = 4
+
+[[companies.jobs.requirements]]
+skill_name = "Python"
+min_proficiency = "Expert"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "Transformers"
+min_proficiency = "Expert"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "LLM Fine-tuning"
+min_proficiency = "Advanced"
+mandatory = true
+weight = 1.0
+
+[[companies.jobs.requirements]]
+skill_name = "RAG"
+min_proficiency = "Advanced"
+mandatory = true
+weight = 0.8
+
+[[companies.jobs.requirements]]
+skill_name = "System Design"
+min_proficiency = "Advanced"
+mandatory = true
+weight = 0.9
