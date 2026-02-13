@@ -1,8 +1,10 @@
 mod companies;
+mod engine;
 mod game;
 mod graphics;
 mod interview;
 mod jobs;
+mod llm;
 mod player;
 mod skills;
 mod ui;
@@ -14,6 +16,7 @@ use game::{GameScreen, GameState};
 use world::{WorldPlayer, Camera, GameMap, BuildingType, Npc, get_npcs};
 use ui::{draw_hud, draw_interaction_hint, draw_controls_hint};
 use jobs::Job;
+use graphics::{init_fonts, draw_text_crisp, use_custom_font, is_custom_font_enabled};
 
 fn window_conf() -> Conf {
     Conf {
@@ -21,6 +24,7 @@ fn window_conf() -> Conf {
         window_width: 1024,
         window_height: 768,
         fullscreen: false,
+        high_dpi: true,
         ..Default::default()
     }
 }
@@ -145,6 +149,10 @@ impl Game {
 
                 if is_key_pressed(KeyCode::Escape) {
                     self.state.screen = GameScreen::Menu;
+                }
+
+                if is_key_pressed(KeyCode::F) {
+                    use_custom_font(!is_custom_font_enabled());
                 }
             }
             GameScreen::Dialog => {
@@ -308,12 +316,18 @@ impl Game {
             if choice.contains("Rest") || choice.contains("Relax") {
                 self.state.player.energy = self.state.player.max_energy;
                 self.state.advance_time(8.0);
+                self.state.screen = GameScreen::World;
+                self.current_dialog = None;
+                return;
             }
             if choice.contains("Buy coffee") {
                 if self.state.player.money >= 5 {
                     self.state.player.money -= 5;
                     self.state.player.energy = (self.state.player.energy + 20).min(self.state.player.max_energy);
                 }
+                self.state.screen = GameScreen::World;
+                self.current_dialog = None;
+                return;
             }
             if choice.contains("View open positions") || choice == "Network with people" {
                 self.state.screen = GameScreen::JobBoard;
@@ -322,9 +336,17 @@ impl Game {
             }
             if choice.contains("Leave") {
                 self.state.screen = GameScreen::World;
+                self.current_dialog = None;
+                return;
+            }
+            if choice.contains("Awesome!") || choice.contains("OK") {
+                self.state.screen = GameScreen::World;
+                self.current_dialog = None;
+                return;
             }
         }
         self.current_dialog = None;
+        self.state.screen = GameScreen::World;
     }
 
     fn handle_study(&mut self) {
@@ -555,12 +577,12 @@ impl Game {
 
     fn draw_title_screen(&mut self) {
         let title = "AI ENGINEER CAREER RPG";
-        draw_text(title, screen_width() / 2.0 - 250.0, screen_height() / 3.0, 48.0, WHITE);
+        draw_text_crisp(title, screen_width() / 2.0 - 250.0, screen_height() / 3.0, 48.0, WHITE);
 
         let subtitle = "Level up your skills, ace interviews, land your dream job!";
-        draw_text(subtitle, screen_width() / 2.0 - 280.0, screen_height() / 3.0 + 50.0, 24.0, Color::from_rgba(200, 200, 200, 255));
+        draw_text_crisp(subtitle, screen_width() / 2.0 - 280.0, screen_height() / 3.0 + 50.0, 24.0, Color::from_rgba(200, 200, 200, 255));
 
-        draw_text("Enter your name:", screen_width() / 2.0 - 80.0, screen_height() / 2.0, 24.0, WHITE);
+        draw_text_crisp("Enter your name:", screen_width() / 2.0 - 80.0, screen_height() / 2.0, 24.0, WHITE);
 
         let input_box_width = 200.0;
         let input_box_x = screen_width() / 2.0 - input_box_width / 2.0;
@@ -569,13 +591,13 @@ impl Game {
 
         let cursor = if (get_time() * 2.0) as i32 % 2 == 0 { "|" } else { "" };
         let display_text = format!("{}{}", self.player_name_input, cursor);
-        draw_text(&display_text, input_box_x + 10.0, screen_height() / 2.0 + 35.0, 24.0, WHITE);
+        draw_text_crisp(&display_text, input_box_x + 10.0, screen_height() / 2.0 + 35.0, 24.0, WHITE);
 
         if !self.player_name_input.is_empty() {
-            draw_text("Press ENTER to start", screen_width() / 2.0 - 100.0, screen_height() / 2.0 + 100.0, 20.0, Color::from_rgba(150, 255, 150, 255));
+            draw_text_crisp("Press ENTER to start", screen_width() / 2.0 - 100.0, screen_height() / 2.0 + 100.0, 20.0, Color::from_rgba(150, 255, 150, 255));
         }
 
-        draw_text("WASD to move | E to interact | I for skills | J for jobs", 
+        draw_text_crisp("WASD to move | E to interact | I for skills | J for jobs", 
             screen_width() / 2.0 - 230.0, screen_height() - 50.0, 18.0, Color::from_rgba(150, 150, 150, 255));
     }
 
@@ -633,15 +655,15 @@ impl Game {
             draw_rectangle(box_margin, box_y, screen_width() - box_margin * 2.0, box_height, Color::from_rgba(0, 0, 0, 220));
             draw_rectangle_lines(box_margin, box_y, screen_width() - box_margin * 2.0, box_height, 2.0, WHITE);
 
-            draw_text(&dialog.speaker, box_margin + 15.0, box_y + 25.0, 22.0, Color::from_rgba(255, 215, 0, 255));
+            draw_text_crisp(&dialog.speaker, box_margin + 15.0, box_y + 25.0, 22.0, Color::from_rgba(255, 215, 0, 255));
 
-            draw_text(&dialog.text, box_margin + 15.0, box_y + 55.0, 20.0, WHITE);
+            draw_text_crisp(&dialog.text, box_margin + 15.0, box_y + 55.0, 20.0, WHITE);
 
             for (i, choice) in dialog.choices.iter().enumerate() {
                 let choice_y = box_y + 85.0 + (i as f32 * 28.0);
                 let prefix = if i == self.selected_choice { "> " } else { "  " };
                 let color = if i == self.selected_choice { Color::from_rgba(255, 255, 100, 255) } else { WHITE };
-                draw_text(&format!("{}{}", prefix, choice), box_margin + 15.0, choice_y, 18.0, color);
+                draw_text_crisp(&format!("{}{}", prefix, choice), box_margin + 15.0, choice_y, 18.0, color);
             }
         }
     }
@@ -655,8 +677,8 @@ impl Game {
         draw_rectangle(panel_x, panel_y, panel_width, panel_height, Color::from_rgba(0, 0, 0, 240));
         draw_rectangle_lines(panel_x, panel_y, panel_width, panel_height, 2.0, WHITE);
 
-        draw_text("YOUR SKILLS", panel_x + 20.0, panel_y + 30.0, 24.0, Color::from_rgba(255, 215, 0, 255));
-        draw_text("Press ESC or I to close", panel_x + 20.0, panel_y + 55.0, 14.0, Color::from_rgba(150, 150, 150, 255));
+        draw_text_crisp("YOUR SKILLS", panel_x + 20.0, panel_y + 30.0, 24.0, Color::from_rgba(255, 215, 0, 255));
+        draw_text_crisp("Press ESC or I to close", panel_x + 20.0, panel_y + 55.0, 14.0, Color::from_rgba(150, 150, 150, 255));
 
         let by_category = self.state.player.get_skills_by_category();
         let categories: [&skills::SkillCategory; 6] = [
@@ -671,12 +693,12 @@ impl Game {
         let mut y = panel_y + 85.0;
         for category in &categories {
             if let Some(skills_list) = by_category.get(*category) {
-                draw_text(&format!("{:?}", category), panel_x + 20.0, y, 16.0, Color::from_rgba(100, 200, 255, 255));
+                draw_text_crisp(&format!("{:?}", category), panel_x + 20.0, y, 16.0, Color::from_rgba(100, 200, 255, 255));
                 y += 22.0;
                 
                 for (name, skill) in skills_list {
                     let xp_bar = self.skill_xp_bar(skill.experience_points, skill.points_to_next_level());
-                    draw_text(&format!("{}: {} {}", name, skill.proficiency.as_str(), xp_bar), 
+                    draw_text_crisp(&format!("{}: {} {}", name, skill.proficiency.as_str(), xp_bar), 
                         panel_x + 40.0, y, 14.0, WHITE);
                     y += 18.0;
                 }
@@ -694,10 +716,10 @@ impl Game {
         draw_rectangle(panel_x, panel_y, panel_width, panel_height, Color::from_rgba(0, 0, 0, 240));
         draw_rectangle_lines(panel_x, panel_y, panel_width, panel_height, 2.0, WHITE);
 
-        draw_text("LIBRARY - Study Skills", panel_x + 20.0, panel_y + 30.0, 24.0, Color::from_rgba(255, 215, 0, 255));
-        draw_text(&format!("Energy: {}/100 (30 per study session)", self.state.player.energy), 
+        draw_text_crisp("LIBRARY - Study Skills", panel_x + 20.0, panel_y + 30.0, 24.0, Color::from_rgba(255, 215, 0, 255));
+        draw_text_crisp(&format!("Energy: {}/100 (30 per study session)", self.state.player.energy), 
             panel_x + 20.0, panel_y + 55.0, 14.0, Color::from_rgba(150, 150, 150, 255));
-        draw_text("Press ESC to leave | WS/Arrows to select | E to study", 
+        draw_text_crisp("Press ESC to leave | WS/Arrows to select | E to study", 
             panel_x + 20.0, panel_y + 75.0, 14.0, Color::from_rgba(150, 150, 150, 255));
 
         let skills: Vec<_> = self.state.player.skills.iter().collect();
@@ -709,11 +731,11 @@ impl Game {
             let color = if selected { Color::from_rgba(255, 255, 100, 255) } else { WHITE };
             let xp_bar = self.skill_xp_bar(skill.experience_points, skill.points_to_next_level());
             
-            draw_text(&format!("{}{}: {} {}", prefix, name, skill.proficiency.as_str(), xp_bar), 
+            draw_text_crisp(&format!("{}{}: {} {}", prefix, name, skill.proficiency.as_str(), xp_bar), 
                 panel_x + 30.0, y, 16.0, color);
             
             if selected {
-                draw_text(&format!("Difficulty: {} | XP to next: {}", 
+                draw_text_crisp(&format!("Difficulty: {} | XP to next: {}", 
                     skill.skill.difficulty, skill.points_to_next_level() - skill.experience_points),
                     panel_x + 50.0, y + 18.0, 12.0, Color::from_rgba(150, 150, 150, 255));
                 y += 20.0;
@@ -737,13 +759,13 @@ impl Game {
         draw_rectangle(panel_x, panel_y, panel_width, panel_height, Color::from_rgba(0, 0, 0, 240));
         draw_rectangle_lines(panel_x, panel_y, panel_width, panel_height, 2.0, WHITE);
 
-        draw_text("JOB BOARD - Press E to Apply", panel_x + 20.0, panel_y + 30.0, 24.0, Color::from_rgba(255, 215, 0, 255));
-        draw_text("WASD to navigate | ESC or J to close", panel_x + 20.0, panel_y + 55.0, 14.0, Color::from_rgba(150, 150, 150, 255));
+        draw_text_crisp("JOB BOARD - Press E to Apply", panel_x + 20.0, panel_y + 30.0, 24.0, Color::from_rgba(255, 215, 0, 255));
+        draw_text_crisp("WASD to navigate | ESC or J to close", panel_x + 20.0, panel_y + 55.0, 14.0, Color::from_rgba(150, 150, 150, 255));
 
         let mut y = panel_y + 90.0;
         let mut idx = 0;
         for company in companies::get_all_companies() {
-            draw_text(&format!("{} ({})", company.name, company.tier.as_str()), 
+            draw_text_crisp(&format!("{} ({})", company.name, company.tier.as_str()), 
                 panel_x + 20.0, y, 18.0, Color::from_rgba(100, 200, 255, 255));
             y += 22.0;
 
@@ -760,9 +782,9 @@ impl Game {
                 let prefix = if selected { "> " } else { "  " };
                 let text_color = if selected { Color::from_rgba(255, 255, 100, 255) } else { WHITE };
                 
-                draw_text(&format!("{}{} - {}", prefix, job.title, job.display_salary()), 
+                draw_text_crisp(&format!("{}{} - {}", prefix, job.title, job.display_salary()), 
                     panel_x + 30.0, y, 14.0, text_color);
-                draw_text(match_indicator, panel_x + 450.0, y, 14.0, match_color);
+                draw_text_crisp(match_indicator, panel_x + 450.0, y, 14.0, match_color);
                 y += 20.0;
                 idx += 1;
             }
@@ -780,29 +802,29 @@ impl Game {
             draw_rectangle(panel_x, panel_y, panel_width, panel_height, Color::from_rgba(0, 0, 0, 240));
             draw_rectangle_lines(panel_x, panel_y, panel_width, panel_height, 2.0, WHITE);
 
-            draw_text(&format!("INTERVIEW: {} at {}", interview.job.title, interview.job.company), 
+            draw_text_crisp(&format!("INTERVIEW: {} at {}", interview.job.title, interview.job.company), 
                 panel_x + 20.0, panel_y + 30.0, 22.0, Color::from_rgba(255, 215, 0, 255));
             
-            draw_text(&format!("Question {}/{} | Score: {}", 
+            draw_text_crisp(&format!("Question {}/{} | Score: {}", 
                 interview.current_question + 1, interview.questions.len(), interview.score), 
                 panel_x + 20.0, panel_y + 55.0, 14.0, Color::from_rgba(150, 150, 150, 255));
 
             if interview.current_question < interview.questions.len() {
                 let q = &interview.questions[interview.current_question];
                 
-                draw_text(&q.question, panel_x + 20.0, panel_y + 100.0, 18.0, WHITE);
+                draw_text_crisp(&q.question, panel_x + 20.0, panel_y + 100.0, 18.0, WHITE);
 
                 let mut y = panel_y + 150.0;
                 for (i, option) in q.options.iter().enumerate() {
                     let selected = i == self.selected_choice;
                     let prefix = if selected { "> " } else { "  " };
                     let color = if selected { Color::from_rgba(255, 255, 100, 255) } else { WHITE };
-                    draw_text(&format!("{}. {}{}", (i + 65) as u8 as char, prefix, option), 
+                    draw_text_crisp(&format!("{}. {}{}", (i + 65) as u8 as char, prefix, option), 
                         panel_x + 30.0, y, 16.0, color);
                     y += 30.0;
                 }
                 
-                draw_text("WASD to select | E to answer", 
+                draw_text_crisp("WASD to select | E to answer", 
                     panel_x + 20.0, panel_y + panel_height - 30.0, 14.0, Color::from_rgba(150, 150, 150, 255));
             }
         }
@@ -817,17 +839,18 @@ impl Game {
         draw_rectangle(panel_x, panel_y, panel_width, panel_height, Color::from_rgba(0, 0, 0, 240));
         draw_rectangle_lines(panel_x, panel_y, panel_width, panel_height, 2.0, WHITE);
 
-        draw_text("MENU", panel_x + 20.0, panel_y + 30.0, 24.0, WHITE);
+        draw_text_crisp("MENU", panel_x + 20.0, panel_y + 30.0, 24.0, WHITE);
 
         let options = ["Resume", "View Skills (I)", "Job Board (J)", "Quit"];
         for (i, option) in options.iter().enumerate() {
-            draw_text(option, panel_x + 30.0, panel_y + 70.0 + (i as f32 * 30.0), 18.0, WHITE);
+            draw_text_crisp(option, panel_x + 30.0, panel_y + 70.0 + (i as f32 * 30.0), 18.0, WHITE);
         }
     }
 }
 
 #[macroquad::main(window_conf)]
 async fn main() {
+    init_fonts();
     let mut game = Game::new();
 
     loop {

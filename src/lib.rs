@@ -1,8 +1,10 @@
 pub mod companies;
+pub mod engine;
 pub mod game;
 pub mod graphics;
 pub mod interview;
 pub mod jobs;
+pub mod llm;
 pub mod player;
 pub mod skills;
 pub mod testing;

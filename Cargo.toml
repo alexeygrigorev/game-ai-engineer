@@ -7,6 +7,10 @@ edition = "2021"
 macroquad = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+toml = "0.8"
 rand = "0.8"
 anyhow = "1.0"
 thiserror = "1.0"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+reqwest = { version = "0.12", features = ["json"] }
+dotenvy = "0.15"

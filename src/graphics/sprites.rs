@@ -1,6 +1,7 @@
-use macroquad::prelude::*;
+use super::draw_text_crisp;
 use crate::world::Direction;
 use crate::world::TILE_SIZE;
+use macroquad::prelude::*;
 
 pub fn draw_player(x: f32, y: f32, direction: Direction, walking: bool, anim_timer: f32) {
     let bounce = if walking {
@@ -11,7 +12,7 @@ pub fn draw_player(x: f32, y: f32, direction: Direction, walking: bool, anim_tim
 
     let px = x;
     let py = y + bounce;
-    
+
     draw_rectangle(px - 10.0, py - 20.0, 20.0, 12.0, BROWN);
     draw_circle(px, py - 5.0, 10.0, BEIGE);
     draw_rectangle(px - 12.0, py + 5.0, 24.0, 18.0, BLUE);
@@ -67,7 +68,7 @@ pub fn draw_building(x: f32, y: f32, width: u32, height: u32, name: &str, color:
     let door_y = y + h - 28.0;
     draw_rectangle(door_x, door_y, 20.0, 28.0, BROWN);
 
-    draw_text(name, x + 5.0, y + h + 15.0, 16.0, WHITE);
+    draw_text_crisp(name, x + 5.0, y + h + 15.0, 16.0, WHITE);
 }
 
 pub fn draw_library(x: f32, y: f32) {

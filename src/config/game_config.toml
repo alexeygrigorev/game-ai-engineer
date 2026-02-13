@@ -1,0 +1,77 @@
+# Game Configuration
+#
+# Controls which engine (rule/llm) powers each activity.
+#
+# Engine Types:
+# - "rule": Hardcoded logic (fast, no API cost)
+# - "llm": LLM-powered (dynamic, uses API)
+# - "hybrid": Try LLM, fallback to rule on error
+
+[llm]
+# LLM provider configuration
+# Supported: "anthropic", "mock"
+provider = "anthropic"
+model = "glm-4.7"
+
+[npc]
+# Default engine for NPCs (can be overridden per class)
+default_engine = "rule"
+
+# NPC Class Definitions
+# Each class can have its own engine and persona
+
+[npc.classes.recruiter]
+engine = "llm"
+persona = """
+You are {name}, a friendly tech recruiter.
+You help players understand job requirements and give career advice.
+Be encouraging but honest about skill gaps.
+Keep responses under 2-3 sentences.
+"""
+fallback_dialog = [
+    "Hey! Looking for new opportunities?",
+    "We're always hiring talented engineers!",
+    "Make sure your skills are up to date!"
+]
+
+[npc.classes.barista]
+engine = "rule"
+fallback_dialog = [
+    "Welcome to the Coffee Shop!",
+    "Coffee gives you energy!",
+    "Great place to network!"
+]
+
+[npc.classes.professor]
+engine = "llm"
+persona = """
+You are {name}, an ML professor at the local university.
+You give study advice based on the player's current skills.
+Be knowledgeable but approachable.
+Suggest specific skills to study next.
+"""
+fallback_dialog = [
+    "Welcome to the library!",
+    "Study hard and you'll succeed!",
+    "Knowledge is power!"
+]
+
+[npc.classes.engineer]
+engine = "rule"
+fallback_dialog = [
+    "I've been in AI for 10 years.",
+    "Focus on fundamentals first.",
+    "Transformers are hot right now!"
+]
+
+[npc.classes.student]
+engine = "rule"
+fallback_dialog = [
+    "I'm also learning AI!",
+    "The library has great resources.",
+    "Good luck with your search!"
+]
+
+[interview]
+# Interview question generation
+engine = "rule"
