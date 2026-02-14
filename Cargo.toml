@@ -2,6 +2,7 @@
 name = "ai_career_rpg"
 version = "0.1.0"
 edition = "2021"
+default-run = "ai_career_rpg"
 
 [dependencies]
 macroquad = "0.4"
