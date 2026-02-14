@@ -35,6 +35,6 @@ pub mod npc;
 
 pub use traits::{ActivityEngine, EngineType};
 pub use config::GameConfig;
-pub use context::GameContext;
+pub use context::{GameContext, SkillInfo};
 pub use cache::ResponseCache;
-pub use npc::NpcEngine;
+pub use npc::{NpcEngine, NpcInput, NpcOutput};

@@ -139,7 +139,6 @@ impl NpcEngine {
     }
     
     /// Create engine with mock provider (for testing)
-    #[cfg(test)]
     pub fn with_mock(config: GameConfig, response: &str) -> Self {
         Self {
             provider: crate::llm::Provider::Mock(
